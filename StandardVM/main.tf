@@ -1,10 +1,12 @@
 provider "azurerm" {
 }
+#This count allows to create mulitiples of VMs
 variable "confignode_count" {default = 5}
 resource "azurerm_resource_group" "terraform" {
   name     = "Terraform-deploy-RG"
   location = "${var.Loc[1]}"
 }
+# Create the network stack and 1 Subnet
 resource "azurerm_virtual_network" "terraform" {
   name                = "ProductionS"
   address_space       = ["10.0.0.0/16"]
@@ -17,8 +19,10 @@ resource "azurerm_subnet" "terraform" {
   virtual_network_name = "${azurerm_virtual_network.terraform.name}"
   address_prefix       = "10.0.2.0/24"
 }
+# This creates allow you to create multilpe networks insterfaces, please make sure that
+# this would need to be the same of the Vms you create. 
 resource "azurerm_network_interface" "test" {
-  name                = "cacctni-${format("%02d", count.index+1)}"
+  name                = "nic-${format("%02d", count.index+1)}"
   count               = "5"
   location            = "${azurerm_resource_group.terraform.location}"
   resource_group_name = "${azurerm_resource_group.terraform.name}"
@@ -27,8 +31,9 @@ resource "azurerm_network_interface" "test" {
     name                          = "terraformconfiguration1"
     subnet_id                     = "${azurerm_subnet.terraform.id}"
     private_ip_address_allocation = "dynamic"
+    }
   }
-}
+  # This sections creates the VM and what OS it uses.
 resource "azurerm_virtual_machine" "terraform" {
   name                  = "MyVm-${format("%02d", count.index+1)}"
   location              = "${azurerm_resource_group.terraform.location}"
@@ -50,7 +55,7 @@ resource "azurerm_virtual_machine" "terraform" {
   }
   storage_os_disk {
     # name              = "osdisk1"
-    name              = "configosdisk-${format("%02d", count.index+1)}"
+    name              = "osdisk-${format("%02d", count.index+1)}"
     caching           = "ReadWrite"
     create_option     = "FromImage"
     managed_disk_type = "Premium_LRS"
