@@ -19,7 +19,7 @@ resource "azurerm_subnet" "terraform" {
   virtual_network_name = "${azurerm_virtual_network.terraform.name}"
   address_prefix       = "10.0.2.0/24"
 }
-# This creates allow you to create multilpe networks insterfaces, please make sure that
+# This allow you to create multilpe networks insterfaces, please make sure that
 # this would need to be the same of the Vms you create. 
 resource "azurerm_network_interface" "test" {
   name                = "nic-${format("%02d", count.index+1)}"
