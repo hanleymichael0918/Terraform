@@ -30,7 +30,7 @@ resource "azurerm_network_interface" "test" {
   }
 }
 resource "azurerm_virtual_machine" "terraform" {
-  name                  = "confignode-${format("%02d", count.index+1)}"
+  name                  = "MyVm-${format("%02d", count.index+1)}"
   location              = "${azurerm_resource_group.terraform.location}"
   resource_group_name   = "${azurerm_resource_group.terraform.name}"
   network_interface_ids = ["${element(azurerm_network_interface.test.*.id, count.index)}"]
