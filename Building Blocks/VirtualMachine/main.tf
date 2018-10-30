@@ -1,7 +1,7 @@
 provider "azurerm" {
 }
 #This count allows to create mulitiples of VMs
-variable "confignode_count" {default = 5}
+variable "confignode_count" {default = 0}
 resource "azurerm_resource_group" "terraform" {
   name     = "Terraform-deploy-RG"
   location = "${var.Loc[1]}"
@@ -23,7 +23,7 @@ resource "azurerm_subnet" "terraform" {
 # this would need to be the same of the Vms you create. 
 resource "azurerm_network_interface" "test" {
   name                = "nic-${format("%02d", count.index+1)}"
-  count               = "5"
+  count               = "1"
   location            = "${azurerm_resource_group.terraform.location}"
   resource_group_name = "${azurerm_resource_group.terraform.name}"
 

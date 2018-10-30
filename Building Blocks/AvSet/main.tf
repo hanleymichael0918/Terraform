@@ -1,6 +1,10 @@
 resource "azurerm_resource_group" "terraform" {
   name     = "Terraform-deploy-RG"
   location = "${var.Loc[1]}"
+
+tags {
+    environment = "Production"
+  }
 }
 resource "azurerm_availability_set" "test" {
   name                          = "AVSet"
