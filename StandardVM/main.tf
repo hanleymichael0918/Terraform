@@ -1,10 +1,14 @@
 provider "azurerm" {
 }
 #This count allows to create mulitiples of VMs
-variable "confignode_count" {default = 5}
+variable "confignode_count" {default = 2}
 resource "azurerm_resource_group" "terraform" {
   name     = "Terraform-deploy-RG"
   location = "${var.Loc[1]}"
+
+  tags {
+    environment = "Production"
+  }
 }
 # Create the network stack and 1 Subnet
 resource "azurerm_virtual_network" "terraform" {
@@ -23,7 +27,7 @@ resource "azurerm_subnet" "terraform" {
 # this would need to be the same of the Vms you create. 
 resource "azurerm_network_interface" "test" {
   name                = "nic-${format("%02d", count.index+1)}"
-  count               = "5"
+  count               = "2"
   location            = "${azurerm_resource_group.terraform.location}"
   resource_group_name = "${azurerm_resource_group.terraform.name}"
 
@@ -33,13 +37,27 @@ resource "azurerm_network_interface" "test" {
     private_ip_address_allocation = "dynamic"
     }
   }
+  resource "azurerm_availability_set" "test" {
+  name                          = "AVSet"
+  location                      = "${azurerm_resource_group.terraform.location}"
+  resource_group_name           = "${azurerm_resource_group.terraform.name}"
+  platform_fault_domain_count   = 2
+  platform_update_domain_count  = 5
+  managed                       = true
+  count                         = "2"
+
+  tags {
+    environment = "Production"
+    }
+  }
   # This sections creates the VM and what OS it uses.
 resource "azurerm_virtual_machine" "terraform" {
-  name                  = "MyVm-${format("%02d", count.index+1)}"
+  name                  = "DC-${format("%02d", count.index+1)}"
   location              = "${azurerm_resource_group.terraform.location}"
   resource_group_name   = "${azurerm_resource_group.terraform.name}"
   network_interface_ids = ["${element(azurerm_network_interface.test.*.id, count.index)}"]
   vm_size               = "Standard_B1ms"
+  availability_set_id   = "${azurerm_availability_set.test.id}"
 
   # Uncomment this line to delete the OS disk automatically when deleting the VM
    delete_os_disk_on_termination = true
