@@ -44,7 +44,7 @@ resource "azurerm_network_interface" "test" {
   platform_fault_domain_count   = 2
   platform_update_domain_count  = 5
   managed                       = true
-  count                         = "2"
+  count                         = "1"
 
   tags {
     environment = "Production"
