@@ -14,4 +14,3 @@ variable "location" {
 variable "NetworkName" {
   description = "The location/region where the virtual network is created. Changing this forces a new resource to be created."
 }
-variable "confignode_count" {default = 2}
