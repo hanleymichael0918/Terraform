@@ -50,12 +50,16 @@ resource "azurerm_network_interface" "Nic_Interface" {
   }
 ############################### Virtual Machine ##################################
 resource "azurerm_virtual_machine" "terraform" {
-  name                  = "${var.Virtual_Machine_prefix}${format("%02d", count.index+1)}"
+  name                  = "${var.Virtual_Machine_Name}${format("%02d", count.index+1)}"
   location              = "${azurerm_resource_group.terraform.location}"
   resource_group_name   = "${azurerm_resource_group.terraform.name}"
   network_interface_ids = ["${element(azurerm_network_interface.Nic_Interface.*.id, count.index)}"]
-  vm_size               = "${var.vm_size}"
+  vm_size               = "${lookup(var.VMSize, 1)}"
   availability_set_id   = "${azurerm_availability_set.test.id}"
+
+  tags {
+    environment = "Production"
+  }
 
   # Uncomment this line to delete the OS disk automatically when deleting the VM
    delete_os_disk_on_termination = true
@@ -65,7 +69,7 @@ resource "azurerm_virtual_machine" "terraform" {
 
   storage_image_reference {
     publisher = "${var.image_publisher}"
-    offer     = "WindowsServer"
+    offer     = "${var.image_offer}"
     sku       = "2016-Datacenter"
     version   = "latest"
   }
@@ -77,11 +81,35 @@ resource "azurerm_virtual_machine" "terraform" {
     managed_disk_type = "Premium_LRS"
   }
   os_profile {
-    computer_name  = "DC01"
+    computer_name  = "${var.Virtual_Machine_Name}"
     admin_username = "DaisyAdmin"
     admin_password = "Password1234!"
   }
   os_profile_windows_config {
   }
+  boot_diagnostics {
+    enabled     = true
+    storage_uri = "${azurerm_storage_account.stor.primary_blob_endpoint}"
+  }
     count = "${var.confignode_count}"
+}
+# Generate random text for a unique storage account name
+resource "random_id" "randomId" {
+    keepers = {
+        # Generate a new ID only when a new resource group is defined
+        resource_group = "${var.resource_group_name}"
+    }
+    byte_length = 8
+}
+# Create storage account for boot diagnostics
+resource "azurerm_storage_account" "stor" {
+    name                        = "diag${random_id.randomId.hex}"
+    resource_group_name         = "${var.resource_group_name}"
+    location                    = "${var.location}"
+    account_tier                = "${var.storage_account_tier}"
+    account_replication_type    = "${var.storage_replication_type}"
+
+    tags {
+        environment = "Terraform Demo"
+    }
 }
