@@ -1,10 +1,12 @@
 ###################### Resource Group ###########################################
 
-  tags {
-    environment = "Production"
-  }
+module "RG" {
+  source = "c:/terraform/github/Terraform/IaaS/WebFarm/rg"
 }
-######################## Virtual Networks #######################################
-module "Networking" {
-  source = "./github/Terraform/IaaS/WebFarm/Networking/"
+###################### Virtual Networks #######################################
+module "Network" {
+  source = "c:/terraform/github/Terraform/IaaS/WebFarm/network"
+}
+module "VM" {
+  source = "c:/terraform/github/Terraform/IaaS/WebFarm/VMs"
 }
