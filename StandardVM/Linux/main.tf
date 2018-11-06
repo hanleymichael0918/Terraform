@@ -1,54 +1,5 @@
 provider "azurerm" {
 }
-variable "confignode_count" {default = 2}
-###################### Resource Group ###########################################
-resource "azurerm_resource_group" "terraform" {
-  name     = "${var.prefix}"
-  location = "UK West"
-
-  tags {
-    environment = "Production"
-  }
-}
-######################## Virtual Networks #######################################
-resource "azurerm_virtual_network" "VirtualNetwork" {
-  name                = "Production"
-  address_space       = ["10.0.0.0/16"]
-  location            = "${azurerm_resource_group.terraform.location}"
-  resource_group_name = "${azurerm_resource_group.terraform.name}"
-}
-resource "azurerm_subnet" "Subnets" {
-  name                 = "acctsub"
-  resource_group_name  = "${azurerm_resource_group.terraform.name}"
-  virtual_network_name = "${azurerm_virtual_network.VirtualNetwork.name}"
-  address_prefix       = "10.0.2.0/24"
-}
-resource "azurerm_network_interface" "Nic_Interface" {
-  name                = "nic-${format("%02d", count.index+1)}"
-  count               = "5"
-  location            = "${azurerm_resource_group.terraform.location}"
-  resource_group_name = "${azurerm_resource_group.terraform.name}"
-
-  ip_configuration {
-    name                          = "terraformconfiguration1"
-    subnet_id                     = "${azurerm_subnet.Subnets.id}"
-    private_ip_address_allocation = "dynamic"
-    }
-  }
-  ########################## Availability Sets #####################################
-  resource "azurerm_availability_set" "test" {
-  name                          = "AVSet1"
-  location                      = "${var.location}"
-  resource_group_name           = "${azurerm_resource_group.terraform.name}"
-  platform_fault_domain_count   = 2
-  platform_update_domain_count  = 5
-  managed                       = true
-  count                         = "1"
-
-  tags {
-    environment = "Production"
-    }
-  }
 ############################### Virtual Machine ##################################
 resource "azurerm_virtual_machine" "terraform" {
   name                  = "DC-${format("%02d", count.index+1)}"
