@@ -69,7 +69,6 @@ resource "azurerm_virtual_machine" "terraform" {
     sku       = "2016-Datacenter"
     version   = "latest"
   }
-  
   storage_os_disk {
     # name              = "osdisk1"
     name              = "osdisk-${format("%02d", count.index+1)}"
