@@ -1,6 +1,6 @@
 provider "azurerm" {
 }
-count = "${var.confignode_count}"
+variable "confignode_count" {default = 2}
 ###################### Resource Group ###########################################
 resource "azurerm_resource_group" "terraform" {
   name     = "${var.prefix}"
@@ -85,4 +85,5 @@ resource "azurerm_virtual_machine" "terraform" {
   }
   os_profile_windows_config {
   }
+    count = "${var.confignode_count}"
 }
