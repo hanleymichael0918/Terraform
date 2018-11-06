@@ -1,45 +1,44 @@
 provider "azurerm" {
 }
-#This count allows to create mulitiples of VMs
-variable "confignode_count" {default = 2}
+count = "${var.confignode_count}"
+###################### Resource Group ###########################################
 resource "azurerm_resource_group" "terraform" {
-  name     = "Terraform-deploy-RG"
-  location = "${var.Loc[1]}"
+  name     = "${var.prefix}"
+  location = "UK West"
 
   tags {
     environment = "Production"
   }
 }
-# Create the network stack and 1 Subnet
-resource "azurerm_virtual_network" "terraform" {
-  name                = "ProductionS"
+######################## Virtual Networks #######################################
+resource "azurerm_virtual_network" "VirtualNetwork" {
+  name                = "${var.NetworkName}"
   address_space       = ["10.0.0.0/16"]
   location            = "${azurerm_resource_group.terraform.location}"
   resource_group_name = "${azurerm_resource_group.terraform.name}"
 }
-resource "azurerm_subnet" "terraform" {
+resource "azurerm_subnet" "Subnets" {
   name                 = "acctsub"
   resource_group_name  = "${azurerm_resource_group.terraform.name}"
-  virtual_network_name = "${azurerm_virtual_network.terraform.name}"
+  virtual_network_name = "${azurerm_virtual_network.VirtualNetwork.name}"
   address_prefix       = "10.0.2.0/24"
 }
-# This allow you to create multilpe networks insterfaces, please make sure that
-# this would need to be the same of the Vms you create. 
-resource "azurerm_network_interface" "test" {
+resource "azurerm_network_interface" "Nic_Interface" {
   name                = "nic-${format("%02d", count.index+1)}"
-  count               = "2"
+  count               = "5"
   location            = "${azurerm_resource_group.terraform.location}"
   resource_group_name = "${azurerm_resource_group.terraform.name}"
 
   ip_configuration {
     name                          = "terraformconfiguration1"
-    subnet_id                     = "${azurerm_subnet.terraform.id}"
+    subnet_id                     = "${azurerm_subnet.Subnets.id}"
     private_ip_address_allocation = "dynamic"
     }
   }
+  ########################## Availability Sets #####################################
   resource "azurerm_availability_set" "test" {
-  name                          = "AVSet"
-  location                      = "${azurerm_resource_group.terraform.location}"
+  name                          = "AVSet1"
+  location                      = "${var.location}"
   resource_group_name           = "${azurerm_resource_group.terraform.name}"
   platform_fault_domain_count   = 2
   platform_update_domain_count  = 5
@@ -50,14 +49,15 @@ resource "azurerm_network_interface" "test" {
     environment = "Production"
     }
   }
-  # This sections creates the VM and what OS it uses.
+############################### Virtual Machine ##################################
 resource "azurerm_virtual_machine" "terraform" {
   name                  = "DC-${format("%02d", count.index+1)}"
   location              = "${azurerm_resource_group.terraform.location}"
   resource_group_name   = "${azurerm_resource_group.terraform.name}"
-  network_interface_ids = ["${element(azurerm_network_interface.test.*.id, count.index)}"]
-  vm_size               = "Standard_B1ms"
+  network_interface_ids = ["${element(azurerm_network_interface.Nic_Interface.*.id, count.index)}"]
+  vm_size               = "${var.vm_size}"
   availability_set_id   = "${azurerm_availability_set.test.id}"
+ 
 
   # Uncomment this line to delete the OS disk automatically when deleting the VM
    delete_os_disk_on_termination = true
@@ -85,5 +85,4 @@ resource "azurerm_virtual_machine" "terraform" {
   }
   os_profile_windows_config {
   }
-  count = "${var.confignode_count}"
 }
