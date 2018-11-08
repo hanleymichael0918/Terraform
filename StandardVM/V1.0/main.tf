@@ -13,18 +13,6 @@ resource "azurerm_resource_group" "terraform" {
     environment = "Production"
   }
 }
-# Create storage account for boot diagnostics
-resource "azurerm_storage_account" "stor" {
-    name                        = "diag5617eae04f1c06eb"
-    resource_group_name         = "${var.resource_group_name}"
-    location                    = "${var.location}"
-    account_tier                = "${var.storage_account_tier}"
-    account_replication_type    = "${var.storage_replication_type}"
-
-    tags {
-        environment = "Terraform Demo"
-    }
-}
 ######################## Virtual Networks #######################################
 resource "azurerm_virtual_network" "VirtualNetwork" {
   name                = "Production"
@@ -102,10 +90,6 @@ resource "azurerm_virtual_machine" "terraform" {
     admin_password = "Password1234!"
   }
   os_profile_windows_config {
-  }
-  boot_diagnostics {
-    enabled     = true
-    storage_uri = "${azurerm_storage_account.stor.primary_blob_endpoint}"
   }
     count = "${var.confignode_count}"
 }
