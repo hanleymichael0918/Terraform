@@ -1,6 +1,8 @@
 # Version Number #
 # V1.1
-# Change Notes #
+# Change Notes 
+# Implemented Boot Diagnostics via a storage account
+# Change the resource label from stor to storage account
 
 provider "azurerm" {
 }
@@ -22,12 +24,13 @@ resource "random_id" "randomId" {
     byte_length = 8
 }
  # Create storage account for boot diagnostics
-resource "azurerm_storage_account" "stor" {
+resource "azurerm_storage_account" "storage" {
     name                        = "diag${random_id.randomId.hex}"
-    resource_group_name         = "${var.resource_group_name}"
     location                    = "${var.location}"
     account_tier                = "${var.storage_account_tier}"
     account_replication_type    = "${var.storage_replication_type}"
+    resource_group_name         = "${var.resource_group_name}"
+    depends_on                  =  ["azurerm_resource_group.terraform"]
 
     tags {
         environment = "Terraform Demo"
@@ -113,7 +116,7 @@ resource "azurerm_virtual_machine" "terraform" {
   }
   boot_diagnostics {
     enabled     = true
-    storage_uri = "${azurerm_storage_account.stor.primary_blob_endpoint}"
+    storage_uri = "${azurerm_storage_account.storage.primary_blob_endpoint}"
   }
     count = "${var.confignode_count}"
 }
