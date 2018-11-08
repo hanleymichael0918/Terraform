@@ -1,6 +1,7 @@
 # Version Number #
 # V1.1
-# Change Notes #
+# Change Notes 
+# Added the variables for the storage account to in link into the main.tf
  
 variable "resource_group_name" {
   type        = "string"
