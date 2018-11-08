@@ -25,7 +25,9 @@ variable "image_publisher" {
 }
 variable "image_offer" {
   description = "the name of the offer (az vm image list)"
-  default     = "WindowsServer"
+}
+variable "image_sku" {
+  description = "image sku to apply (az vm image list)"
 }
 variable "image_version" {
   description = "version of the image to apply (az vm image list)"
