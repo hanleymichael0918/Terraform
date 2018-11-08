@@ -13,9 +13,17 @@ resource "azurerm_resource_group" "terraform" {
     environment = "Production"
   }
 }
-# Create storage account for boot diagnostics
+resource "random_id" "randomId" {
+    keepers = {
+        # Generate a new ID only when a new resource group is defined
+        resource_group = "${var.resource_group_name}"
+    }
+
+    byte_length = 8
+}
+ # Create storage account for boot diagnostics
 resource "azurerm_storage_account" "stor" {
-    name                        = "diag5617eae04f1c06eb"
+    name                        = "diag${random_id.randomId.hex}"
     resource_group_name         = "${var.resource_group_name}"
     location                    = "${var.location}"
     account_tier                = "${var.storage_account_tier}"
