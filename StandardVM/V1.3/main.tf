@@ -1,6 +1,7 @@
 # Version Number #
 # V1.3
 # Change Notes
+# V1.3 Added the Subscription Details into the code.
 # V1.3 Change Line 38 From Terraform Demo to Production
 # V1.3 Added Comment on line 44
 # V1.3 Chanage the label from acctsub to Internal on line 55
@@ -13,7 +14,12 @@
 # V1.1 Change the resource label from stor to storage account
 
 provider "azurerm" {
-}
+
+   subscription_id = "7f2dcecb-e3cb-4020-a98c-13e65875ea64"
+   client_id       = "02ab08d2-969e-458c-b4b3-87b1cad32bc2"
+   client_secret   = "dvQ9Kwr+fFZNPXUs1TZXoqVulEAnvIB5xlMpOL0n0S4="
+   tenant_id       = "2f55424d-e376-451c-8056-7bd6e3dc76b7"
+}   
 ###################### Resource Group ###########################################
 
  # Create a resource group containter
@@ -96,7 +102,7 @@ resource "azurerm_virtual_machine" "terraform" {
   resource_group_name   = "${azurerm_resource_group.terraform.name}"
   network_interface_ids = ["${element(azurerm_network_interface.Nic_Interface.*.id, count.index)}"]
   vm_size               = "${lookup(var.VMSize, 0)}"
-  availability_set_id   = "${azurerm_availability_set.test.id}"
+  availability_set_id   = "${azurerm_availability_set.AVSet.id}"
 
   tags {
     environment = "Production"
