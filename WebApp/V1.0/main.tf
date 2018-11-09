@@ -22,7 +22,7 @@ resource "random_integer" "ri" {
   min = 10000
   max = 99999
 }
-
+###################### App Service Plan ###########################################
 resource "azurerm_app_service_plan" "default" {
   name                = "tfex-appservice-${random_integer.ri.result}-plan"
   location            = "${var.location}"
@@ -34,7 +34,7 @@ resource "azurerm_app_service_plan" "default" {
     size = "${var.app_service_plan_sku_size}"
   }
 }
-
+###################### App Service ###########################################
 resource "azurerm_app_service" "default" {
   name                = "tfex-appservice-${random_integer.ri.result}"
   location            = "${var.location}"
@@ -47,6 +47,7 @@ resource "azurerm_app_service" "default" {
     remote_debugging_version = "VS2015"
   }
 }
+###################### Redis Cache ###########################################
 resource "azurerm_redis_cache" "test" {
   name                = "tf-redis-basic"
   location            = "${var.location}"
