@@ -1,3 +1,5 @@
+# Version Number V1.0
+
 variable "resource_group_name" {
   type        = "string"
   description = "Name of the azure resource group."
