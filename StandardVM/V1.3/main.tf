@@ -1,6 +1,7 @@
 # Version Number #
 # V1.3
 # Change Notes
+# V1.3 Added comments on line 18
 # V1.3 Added the Subscription Details into the code.
 # V1.3 Change Line 38 From Terraform Demo to Production
 # V1.3 Added Comment on line 44
@@ -12,6 +13,8 @@
 # V1.2 Added the VM agent tools to the VMs
 # V1.1 Implemented Boot Diagnostics via a storage account
 # V1.1 Change the resource label from stor to storage account
+
+##################### Cloud Provider ###########################################
 
 provider "azurerm" {
 
@@ -55,7 +58,7 @@ resource "azurerm_storage_account" "storage" {
 }
 ######################## Virtual Networks #######################################
 
-# Create Virtual Network and a 1 Subnet.
+# Create Virtual Network with 1 Subnet.
 resource "azurerm_virtual_network" "VirtualNetwork" {
   name                = "Production"
   address_space       = ["10.0.0.0/16"]
