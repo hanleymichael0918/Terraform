@@ -64,6 +64,10 @@ resource "azurerm_virtual_network" "VirtualNetwork" {
   address_space       = ["10.0.0.0/16"]
   location            = "${azurerm_resource_group.terraform.location}"
   resource_group_name = "${azurerm_resource_group.terraform.name}"
+
+tags {
+        environment = "Production"
+    }
 }
 resource "azurerm_subnet" "Subnets" {
   name                 = "Internal"
@@ -99,7 +103,7 @@ resource "azurerm_network_interface" "Nic_Interface" {
     }
   }  
 ############################### Virtual Machine ##################################
-resource "azurerm_virtual_machine" "terraform" {
+resource "azurerm_virtual_machine" "vm" {
   name                  = "${var.Virtual_Machine_Name}${format("%02d", count.index+1)}"
   location              = "${azurerm_resource_group.terraform.location}"
   resource_group_name   = "${azurerm_resource_group.terraform.name}"
