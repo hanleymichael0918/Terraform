@@ -2,6 +2,12 @@
 # V1.3
 # Change Notes
 # V1.3 Change Line 38 From Terraform Demo to Production
+# V1.3 Added Comment on line 44
+# V1.3 Chanage the label from acctsub to Internal on line 55
+# V1.3 Added Comment on line 59
+# V1.3 Change the line 74 from Test to AVSet on line 74
+# V1.3 Add comment on line 18 about resource group
+# V1.3 Add Comment on line 28
 # V1.2 Added the VM agent tools to the VMs
 # V1.1 Implemented Boot Diagnostics via a storage account
 # V1.1 Change the resource label from stor to storage account
@@ -9,6 +15,8 @@
 provider "azurerm" {
 }
 ###################### Resource Group ###########################################
+
+ # Create a resource group containter
 resource "azurerm_resource_group" "terraform" {
   name     = "${var.resource_group_name}"
   location = "${var.location}"
@@ -17,6 +25,7 @@ resource "azurerm_resource_group" "terraform" {
     environment = "Production"
   }
 }
+ # Create a randomised id every time a new resource group is created
 resource "random_id" "randomId" {
     keepers = {
         # Generate a new ID only when a new resource group is defined
@@ -39,6 +48,8 @@ resource "azurerm_storage_account" "storage" {
     }
 }
 ######################## Virtual Networks #######################################
+
+# Create Virtual Network and a 1 Subnet.
 resource "azurerm_virtual_network" "VirtualNetwork" {
   name                = "Production"
   address_space       = ["10.0.0.0/16"]
@@ -46,11 +57,12 @@ resource "azurerm_virtual_network" "VirtualNetwork" {
   resource_group_name = "${azurerm_resource_group.terraform.name}"
 }
 resource "azurerm_subnet" "Subnets" {
-  name                 = "acctsub"
+  name                 = "Internal"
   resource_group_name  = "${azurerm_resource_group.terraform.name}"
   virtual_network_name = "${azurerm_virtual_network.VirtualNetwork.name}"
   address_prefix       = "10.0.2.0/24"
 }
+# Create the network interface for each virtual machines.
 resource "azurerm_network_interface" "Nic_Interface" {
   name                = "nic-${format("%02d", count.index+1)}"
   count               = "${var.confignode_count}"
@@ -64,7 +76,7 @@ resource "azurerm_network_interface" "Nic_Interface" {
     }
   }
   ########################## Availability Sets #####################################
-  resource "azurerm_availability_set" "test" {
+  resource "azurerm_availability_set" "AVSet" {
   name                          = "AV-${format("%02d", count.index+1)}"
   location                      = "${var.location}"
   resource_group_name           = "${azurerm_resource_group.terraform.name}"
