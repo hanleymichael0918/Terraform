@@ -49,7 +49,7 @@ resource "azurerm_app_service" "default" {
 }
 ###################### Redis Cache ###########################################
 resource "azurerm_redis_cache" "test" {
-  name                = "tf-redis-basic"
+  name                = "tf-redis-basic-${random_integer.ri.result}-plan"
   location            = "${var.location}"
   resource_group_name = "${var.resource_group_name}"
   capacity            = 0
@@ -59,7 +59,5 @@ resource "azurerm_redis_cache" "test" {
   depends_on          =  ["azurerm_resource_group.terraform"]
 
 redis_configuration {
-    maxmemory_delta    = 2
-    maxmemory_policy   = "allkeys-lru"
   }
 }
