@@ -1,6 +1,7 @@
 # Version Number #
-# V1.3
+# V1.4
 # Change Notes
+# V1.4 Added a Second Network to the VM
 # V1.3 Added comments on line 18
 # V1.3 Added the Subscription Details into the code.
 # V1.3 Change Line 38 From Terraform Demo to Production
@@ -88,6 +89,18 @@ resource "azurerm_network_interface" "Nic_Interface" {
     private_ip_address_allocation = "dynamic"
     }
   }
+  resource "azurerm_network_interface" "Nic_Interface1" {
+  name                = "nic2-${format("%02d", count.index+1)}"
+  count               = "${var.confignode_count}"
+  location            = "${azurerm_resource_group.terraform.location}"
+  resource_group_name = "${azurerm_resource_group.terraform.name}"
+
+  ip_configuration {
+    name                          = "terraformconfiguration2"
+    subnet_id                     = "${azurerm_subnet.Subnets.id}"
+    private_ip_address_allocation = "dynamic"
+    }
+  }
   ########################## Availability Sets #####################################
   resource "azurerm_availability_set" "AVSet" {
   name                          = "AV-${format("%02d", count.index+1)}"
@@ -108,8 +121,10 @@ resource "azurerm_virtual_machine" "vm" {
   location              = "${azurerm_resource_group.terraform.location}"
   resource_group_name   = "${azurerm_resource_group.terraform.name}"
   network_interface_ids = ["${element(azurerm_network_interface.Nic_Interface.*.id, count.index)}"]
+  network_interface_ids = ["${element(azurerm_network_interface.Nic_Interface1.*.id, count.index)}"]
   vm_size               = "${var.VMSize}"
   availability_set_id   = "${azurerm_availability_set.AVSet.id}"
+  primary_network_interface_id = "${azurerm_network_interface.Nic_Interface.id}"
 
   tags {
     environment = "Production"
@@ -131,7 +146,7 @@ resource "azurerm_virtual_machine" "vm" {
     name              = "osdisk-${format("%02d", count.index+1)}"
     caching           = "ReadWrite"
     create_option     = "FromImage"
-    managed_disk_type = "Premium_LRS"
+    managed_disk_type = "${var.Disk_Type}"
   }
   os_profile {
     computer_name  = "${var.Virtual_Machine_Name}"
