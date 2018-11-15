@@ -31,7 +31,7 @@ resource "azurerm_resource_group" "terraform" {
   location = "${var.location}"
 
   tags {
-    environment = "Production"
+    Resouce_Group = "Production"
   }
 }
  # Create a randomised id every time a new resource group is created
@@ -53,7 +53,7 @@ resource "azurerm_storage_account" "storage" {
     depends_on                  =  ["azurerm_resource_group.terraform"]
 
     tags {
-        environment = "Production"
+        Storage = "Boot"
     }
 }
 ######################## Virtual Networks #######################################
@@ -66,7 +66,7 @@ resource "azurerm_virtual_network" "VirtualNetwork" {
   resource_group_name = "${azurerm_resource_group.terraform.name}"
 
 tags {
-        environment = "Production"
+        Network = "Production"
     }
 }
 resource "azurerm_subnet" "Subnets" {
@@ -89,7 +89,7 @@ resource "azurerm_network_interface" "Nic1" {
     }
   }
   resource "azurerm_network_interface" "Nic2" {
-  name                = "vnic2-${format("%02d", count.index+1)}"
+  name                = "nic2-${format("%02d", count.index+1)}"
   count               = "${var.confignode_count}"
   location            = "${var.location}"
   resource_group_name = "${var.resource_group_name}"
@@ -112,7 +112,7 @@ resource "azurerm_network_interface" "Nic1" {
   depends_on                    =  ["azurerm_resource_group.terraform"]
 
   tags {
-    environment = "Production"
+    Availability = "Production"
     }
   }  
 ############################### Virtual Machine ##################################
@@ -128,7 +128,7 @@ resource "azurerm_virtual_machine" "vm" {
   count                 = "${var.confignode_count}"
   
   tags {
-    environment = "Production"
+    Servers = "Production"
   }
 
   # Uncomment this line to delete the OS disk automatically when deleting the VM
