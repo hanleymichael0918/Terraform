@@ -1,6 +1,7 @@
 # Version Number #
 # V1.4
 # Change Notes
+# V1.4 Added support for Second Nic to be added to any VMs that are created
 # V1.3 Added comments on line 18
 # V1.3 Added the Subscription Details into the code.
 # V1.3 Change Line 38 From Terraform Demo to Production
