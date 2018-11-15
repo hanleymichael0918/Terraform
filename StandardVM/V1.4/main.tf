@@ -1,6 +1,11 @@
 # Version Number #
 # V1.4
 # Change Notes
+# v1.4 Change line 137 from enviourment to Servers
+# V1.4 Change line 120 from enviourment to Availability
+# V1.4 Change line 74 from enviourment to Network
+# V1.4 Change line 60 from enviourment to Boot
+# V1.4 Change line 37 from enviourment to Resource_Group
 # V1.4 Added support for Second Nic to be added to any VMs that are created
 # V1.3 Added comments on line 18
 # V1.3 Added the Subscription Details into the code.
