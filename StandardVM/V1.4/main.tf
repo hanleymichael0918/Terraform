@@ -76,7 +76,7 @@ resource "azurerm_subnet" "Subnets" {
   address_prefix       = "10.0.2.0/24"
 }
 # Create the network interface for each virtual machines.
-resource "azurerm_network_interface" "Nic_Interface" {
+resource "azurerm_network_interface" "Nic1" {
   name                = "nic-${format("%02d", count.index+1)}"
   count               = "${var.confignode_count}"
   location            = "${var.location}"
@@ -88,7 +88,7 @@ resource "azurerm_network_interface" "Nic_Interface" {
     private_ip_address_allocation = "dynamic"
     }
   }
-  resource "azurerm_network_interface" "Nic_Interface1" {
+  resource "azurerm_network_interface" "Nic2" {
   name                = "vnic2-${format("%02d", count.index+1)}"
   count               = "${var.confignode_count}"
   location            = "${var.location}"
@@ -104,11 +104,12 @@ resource "azurerm_network_interface" "Nic_Interface" {
   resource "azurerm_availability_set" "AVSet" {
   name                          = "AV-${format("%02d", count.index+1)}"
   location                      = "${var.location}"
-  resource_group_name           = "${azurerm_resource_group.terraform.name}"
+  resource_group_name           = "${var.resource_group_name}"
   platform_fault_domain_count   = 2
   platform_update_domain_count  = 5
   managed                       = true
   count                         = "1"
+  depends_on                    =  ["azurerm_resource_group.terraform"]
 
   tags {
     environment = "Production"
@@ -119,11 +120,13 @@ resource "azurerm_virtual_machine" "vm" {
   name                  = "${var.Virtual_Machine_Name}${format("%02d", count.index+1)}"
   location              = "${var.location}"
   resource_group_name   = "${var.resource_group_name}"
-  network_interface_ids = ["${element(azurerm_network_interface.Nic_Interface.*.id, count.index)}"]
+  network_interface_ids = ["${element(azurerm_network_interface.Nic1.*.id, count.index)}"]
+  network_interface_ids = ["${element(azurerm_network_interface.Nic2.*.id, count.index)}"]
   vm_size               = "${var.VMSize}"
   availability_set_id   = "${azurerm_availability_set.AVSet.id}"
-  primary_network_interface_id = "${azurerm_network_interface.Nic_Interface.id}"
+  primary_network_interface_id = "${element(azurerm_network_interface.Nic1.*.id, count.index)}"
   count                 = "${var.confignode_count}"
+  
   tags {
     environment = "Production"
   }
@@ -158,5 +161,5 @@ resource "azurerm_virtual_machine" "vm" {
     enabled     = true
     storage_uri = "${azurerm_storage_account.storage.primary_blob_endpoint}"
   }
-    count = "${var.confignode_count}"   
+    count = "${var.confignode_count}"
 }
