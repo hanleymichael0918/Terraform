@@ -20,6 +20,7 @@ variable "location" {
   description = "The location/region where the virtual network is created. Changing this forces a new resource to be created."
 }
 variable "image_publisher" {
+  default = "MicrosoftWindowsServer"
   description = "Name of the publisher of the image (az vm image list)"
 }
 variable "image_offer" {
@@ -27,7 +28,6 @@ variable "image_offer" {
   description = "the name of the offer (az vm image list)"
 }
 variable "image_sku" {
-  default = "2016-Datacenter"
   description = "image sku to apply (az vm image list)"
 }
 variable "image_version" {
@@ -36,7 +36,7 @@ variable "image_version" {
 }
 variable "storage_replication_type" {
   description = "Defines the Replication Type to use for this storage account. Valid options include LRS, GRS etc."
-  default     = "LRS"
+  default     = "GRS"
 }
 variable "storage_account_tier" {
   description = "Defines the Tier of storage account to be created. Valid options are Standard and Premium."
@@ -45,6 +45,6 @@ variable "storage_account_tier" {
 variable "VMSize" {
    description = "What size VM would you like"
 }
-variable "Disk_Type" {
+variable "vm_Disk_Type" {
    description = "What Disk type would you like to use"
 }
