@@ -1,24 +1,7 @@
 # Version Number #
-# V1.4
+# V1.0
 # Change Notes
-# v1.4 Change line 137 from enviourment to Servers
-# V1.4 Change line 120 from enviourment to Availability
-# V1.4 Change line 74 from enviourment to Network
-# V1.4 Change line 60 from enviourment to Boot
-# V1.4 Change line 37 from enviourment to Resource_Group
-# V1.4 Added support for Second Nic to be added to any VMs that are created
-# V1.3 Added comments on line 18
-# V1.3 Added the Subscription Details into the code.
-# V1.3 Change Line 38 From Terraform Demo to Production
-# V1.3 Added Comment on line 44
-# V1.3 Chanage the label from acctsub to Internal on line 55
-# V1.3 Added Comment on line 59
-# V1.3 Change the line 74 from Test to AVSet on line 74
-# V1.3 Add comment on line 18 about resource group
-# V1.3 Add Comment on line 28
-# V1.2 Added the VM agent tools to the VMs
-# V1.1 Implemented Boot Diagnostics via a storage account
-# V1.1 Change the resource label from stor to storage account
+
 
 ##################### Cloud Provider ###########################################
 
