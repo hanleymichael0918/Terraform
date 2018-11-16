@@ -1,9 +1,6 @@
 # Version Number #
-# V1.4
+# V1.0
 # Change Notes
-# Added more Varabiles to allow customer facing questions
-# Re Order the Variables
-# V1.1 Added the variables for the storage account to in link into the main.tf
  
 variable "resource_group_name" {
   type        = "string"
