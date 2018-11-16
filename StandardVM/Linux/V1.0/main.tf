@@ -1,7 +1,7 @@
 # Version Number #
 # V1.0
 # Change Notes
-# V1.0 Added os_profile_linux_config as it is required for linux deployment
+# V1.0 Added os_profile_linux_config as it is required for linux deployment.
 
 ##################### Cloud Provider ###########################################
 
