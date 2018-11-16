@@ -1,6 +1,8 @@
 # Version Number #
 # V1.0
 # Change Notes
+# V1.0 Changed Line 21 from MicrosoftWindowsServer to RedHat.
+# V1.0 Changed Line 26 from WindowsServer to RHEL.
  
 variable "resource_group_name" {
   type        = "string"
