@@ -1,7 +1,7 @@
 # Version Number #
 # V1.0
 # Change Notes
-
+# V1.0 Added os_profile_linux_config as it is required for linux deployment
 
 ##################### Cloud Provider ###########################################
 
@@ -143,8 +143,8 @@ resource "azurerm_virtual_machine" "vm" {
     admin_username = "DaisyAdmin"
     admin_password = "Password1234!"
   }
-  os_profile_windows_config {
-    provision_vm_agent        = true
+ os_profile_linux_config {
+        disable_password_authentication = false
   }
   boot_diagnostics {
     enabled     = true

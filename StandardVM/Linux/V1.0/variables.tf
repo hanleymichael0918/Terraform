@@ -17,11 +17,11 @@ variable "location" {
   description = "The location/region where the virtual network is created. Changing this forces a new resource to be created."
 }
 variable "image_publisher" {
-  default = "MicrosoftWindowsServer"
+  default = "RedHat"
   description = "Name of the publisher of the image (az vm image list)"
 }
 variable "image_offer" {
-  default = "WindowsServer"
+  default = "RHEL"
   description = "the name of the offer (az vm image list)"
 }
 variable "image_sku" {
