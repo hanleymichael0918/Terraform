@@ -25,3 +25,8 @@ Project/jcb/V1.4/variables.tf
 Project/jcb/V1.5/variables.tf
 Project/jcb/V1.5/output.tf
 Project/jcb/V1.5/main.tf
+Blank File/Main.tf
+Blank File/output.tf
+Blank File/variables.tf
+jcb/ukwest/vm/.terraform/plugins/windows_amd64/terraform-provider-random_v2.0.0_x4.exe
+jcb/ukwest/vm/.terraform/plugins/windows_amd64/terraform-provider-azurerm_v1.19.0_x4.exe

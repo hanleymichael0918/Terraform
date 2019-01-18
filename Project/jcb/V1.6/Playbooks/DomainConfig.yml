@@ -1,0 +1,8 @@
+---
+- hosts: win
+  tasks:
+   - name: "AD-Domain-Services"
+     win_domain:
+      dns_domain_name:  SQLPOC.local
+      safe_mode_password: Welcome123!
+  

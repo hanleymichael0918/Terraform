@@ -1,0 +1,12 @@
+[win]
+10.0.2.7
+
+[apps]
+10.0.2.7
+
+[win:vars]
+ansible_user=DaisyAdmin
+ansible_password=Password1234!
+ansible_connection=winrm
+ansible_winrm_server_cert_validation=ignore
+
