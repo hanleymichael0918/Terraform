@@ -1,9 +1,0 @@
----
-- hosts: win
-  tasks:
-   - name: "AD-Domain-Services"
-     win_feature:
-      name: AD-Domain-Services
-      state: present
-      include_management_tools: yes
-      include_sub_features: yes
