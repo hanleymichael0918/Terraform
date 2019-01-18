@@ -1,6 +1,7 @@
 # Version Number #
 # V1.5
 # Change Notes
+# V1.5 Removed Second Nic deployment from VM
 # v1.4 Change line 137 from enviourment to Servers
 # V1.4 Change line 120 from enviourment to Availability
 # V1.4 Change line 74 from enviourment to Network
@@ -94,18 +95,6 @@ resource "azurerm_network_interface" "Nic1" {
     private_ip_address_allocation = "dynamic"
     }
   }
-  resource "azurerm_network_interface" "Nic2" {
-  name                = "nic2-${format("%02d", count.index+1)}"
-  count               = "${var.confignode_count}"
-  location            = "${var.location}"
-  resource_group_name = "${var.resource_group_name}"
-
-  ip_configuration {
-    name                          = "terraformconfiguration1"
-    subnet_id                     = "${azurerm_subnet.Subnets.id}"
-    private_ip_address_allocation = "dynamic"
-    }
-  }
   ########################## Availability Sets #####################################
   resource "azurerm_availability_set" "AVSet" {
   name                          = "AV-${format("%02d", count.index+1)}"
@@ -127,7 +116,6 @@ resource "azurerm_virtual_machine" "vm" {
   location              = "${var.location}"
   resource_group_name   = "${var.resource_group_name}"
   network_interface_ids = ["${element(azurerm_network_interface.Nic1.*.id, count.index)}"]
-  network_interface_ids = ["${element(azurerm_network_interface.Nic2.*.id, count.index)}"]
   vm_size               = "${var.VMSize}"
   availability_set_id   = "${azurerm_availability_set.AVSet.id}"
   primary_network_interface_id = "${element(azurerm_network_interface.Nic1.*.id, count.index)}"
